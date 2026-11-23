@@ -148,11 +148,7 @@ pub(super) fn write_file(params: IdeWriteParams) -> Result<WriteFileResult, RpcE
         std::process::id(),
         NEXT_SWAP.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
     ));
-    let mut file = fs::OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .open(&swap)
-        .map_err(|e| map_io_error(e, parent))?;
+    let mut file = create_save_temp(&swap).map_err(|e| map_io_error(e, parent))?;
     let result = (|| {
         file.write_all(&bytes).map_err(|e| map_io_error(e, &path))?;
         if let Ok(metadata) = fs::metadata(&path) {
@@ -187,4 +183,16 @@ pub(super) fn write_file(params: IdeWriteParams) -> Result<WriteFileResult, RpcE
         let _ = fs::remove_file(&swap);
     }
     result
+}
+
+fn create_save_temp(path: &Path) -> io::Result<File> {
+    let mut options = fs::OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        // Restrict access at creation, before any private content reaches disk.
+        options.mode(0o600);
+    }
+    options.open(path)
 }
