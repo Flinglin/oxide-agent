@@ -129,7 +129,7 @@ jobs:
       - name: Install Linux system dependencies
         uses: ./.github/actions/install-linux-deps
         with:
-          extra_packages: 'curl file patchelf desktop-file-utils dpkg-dev rpm freerdp2-dev'
+          extra_packages: 'curl file patchelf desktop-file-utils dpkg-dev rpm freerdp3-dev'
 
       - name: Build bundled remote agents
         run: ./scripts/build/build-agent.sh
