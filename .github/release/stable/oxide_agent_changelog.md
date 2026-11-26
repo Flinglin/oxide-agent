@@ -12,3 +12,13 @@ section as the detailed changelog attached to the corresponding GitHub Release.
 ### English
 
 - the stdin/stdout JSON-RPC remote agent (compat 3) with filesystem operations, grep, Git status, multi-language symbol indexing, atomic writes, and SHA-256 conflict checks
+
+## 0.1.1
+
+### 中文
+
+- 修复unix系统中swap文件权限问题
+
+### English
+
+- Fix swap file permission issues on Unix
